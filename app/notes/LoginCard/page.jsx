@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Login } from "../../utils/login";
+import { Login } from "../../../utils/login";
 const LoginCard = () => {
   return (
     <div className="flex items-center justify-center min-h-screen w-screen bg-gray-900">
