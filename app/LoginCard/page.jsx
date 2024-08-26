@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { Login } from "../../utils/login";
+import { Login } from "./login";
 const LoginCard = () => {
   return (
     <div className="flex items-center justify-center min-h-screen w-screen bg-gray-900">
-      <form onSubmit={Login} className="bg-gray-800 p-8 rounded-lg w-80">
+      <form action={Login} className="bg-gray-800 p-8 rounded-lg w-80">
         <h1 className="text-center text-white text-2xl font-bold">
           DevConnect
         </h1>

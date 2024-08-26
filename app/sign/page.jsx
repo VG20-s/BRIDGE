@@ -1,7 +1,12 @@
-// "use client";
+"use client";
 import Link from "next/link";
-import { handleSignUp } from "../../utils/signup";
+import { handleSignUp } from "./signup";
+import TechSearchInterface from "../../components/TecListselect";
+import { useState } from "react";
 const sign = () => {
+  const [isOpenstack, setisOpenstack] = useState(false);
+  const [isSen, setisSen] = useState(false);
+  const [stack, setstack] = useState(false);
   return (
     <div className="flex items-center justify-center min-h-screen w-screen bg-gray-900">
       <form action={handleSignUp} className="bg-gray-800 p-8 rounded-lg w-80">
@@ -43,6 +48,14 @@ const sign = () => {
         </div>
 
         <button
+          type="button"
+          onClick={() => setisOpenstack(true)}
+          className="w-full mt-6 p-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-500 transition-colors"
+        >
+          회원가입
+        </button>
+
+        <button
           type="submit"
           className="w-full mt-6 p-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-500 transition-colors"
         >
@@ -55,6 +68,14 @@ const sign = () => {
           뒤로가기
         </Link>
       </form>
+      {isOpenstack && (
+        <div
+          onClick={() => setisOpenstack(false)}
+          className="w-screen h-screen fixed flex justify-center items-center bg-slate-600 bg-opacity-50"
+        >
+          <TechSearchInterface />
+        </div>
+      )}
     </div>
   );
 };
