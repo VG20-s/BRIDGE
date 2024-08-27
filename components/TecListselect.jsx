@@ -2,38 +2,44 @@
 import React, { useState } from "react";
 
 const techStacks = [
-  "React.js",
-  "Node.js",
-  "Django",
-  "Vue.js",
+  // Frontend
+  "HTML",
+  "CSS",
+  "JavaScript",
+  "TypeScript",
+  "React",
   "Angular",
+  "Vue.js",
+  "Svelte",
+  "Bootstrap",
+  "Tailwind CSS",
+  "Sass",
+  "Webpack",
+  "Vite",
+  "Next.js",
+  "Nuxt.js",
+  "Styled-component",
+
+  // Backend
+  "Node.js",
   "Express.js",
+  "Django",
   "Flask",
   "Ruby on Rails",
   "Spring Boot",
-  "Laravel",
   "ASP.NET Core",
-  "GraphQL",
-  "MongoDB",
-  "PostgreSQL",
-  "MySQL",
-  "Redis",
-  "Docker",
-  "Kubernetes",
-  "AWS",
-  "Azure",
-  "Google Cloud Platform",
-  "TensorFlow",
-  "PyTorch",
-  "Scikit-learn",
-  "Pandas",
-  "NumPy",
-  "Matplotlib",
+  "NestJS",
+  "Koa",
+  "FastAPI",
+  "Golang",
+  "PHP",
 ];
 
-export default function TechSearchInterface() {
+export default function TechSearchInterface({
+  selectedTechs,
+  setSelectedTechs,
+}) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTechs, setSelectedTechs] = useState([]);
 
   const filteredTechs = techStacks.filter((tech) =>
     tech.toLowerCase().includes(searchTerm.toLowerCase())
