@@ -3,6 +3,7 @@ import Link from "next/link";
 import { handleSignUp } from "./signup";
 import TechSearchInterface from "../../components/TecListselect";
 import { useRef, useState } from "react";
+import { Tooltip } from "@chakra-ui/react";
 const sign = () => {
   const [isOpenstack, setisOpenstack] = useState(false);
   const [isSen, setisSen] = useState(false);
@@ -61,18 +62,20 @@ const sign = () => {
           >
             Senier
           </button>
-          <button
-            type="button"
-            onClick={() => setisOpenstack(true)}
-            className={`w-full mt-6 p-2 ${
-              isSen
-                ? "bg-indigo-600 hover:bg-indigo-500 transition-colors"
-                : "bg-gray-600"
-            }   text-white rounded-full `}
-            disabled={!isSen}
-          >
-            스택선택
-          </button>
+          <Tooltip label="스택은 시니어만 가능합니다!" isDisabled={isSen}>
+            <button
+              type="button"
+              onClick={() => setisOpenstack(true)}
+              className={`w-full mt-6 p-2 ${
+                isSen
+                  ? "bg-indigo-600 hover:bg-indigo-500 transition-colors"
+                  : "bg-gray-600"
+              }   text-white rounded-full `}
+              disabled={!isSen}
+            >
+              스택선택
+            </button>
+          </Tooltip>
         </div>
 
         <button
