@@ -1,5 +1,14 @@
 "use client";
 import React, { useState } from "react";
+import {
+  Box,
+  Checkbox,
+  Input,
+  Text,
+  VStack,
+  StackDivider,
+  useColorModeValue,
+} from "@chakra-ui/react";
 
 const techStacks = [
   // Frontend
@@ -51,37 +60,50 @@ export default function TechSearchInterface({
     );
   };
 
+  const borderColor = useColorModeValue("gray.300", "gray.600");
+  const bgColor = useColorModeValue("gray.200", "gray.700");
+
   return (
-    <div
-      className="w-80 mx-auto mt-8 border border-gray-300 rounded-lg shadow-sm bg-slate-200 "
+    <Box
+      w="80"
+      mx="auto"
+      mt="8"
+      borderWidth="1px"
+      borderRadius="lg"
+      borderColor={borderColor}
+      boxShadow="sm"
+      bg={bgColor}
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="p-4 border-b border-gray-300">
-        <input
-          type="text"
+      <Box p="4" borderBottomWidth="1px" borderColor={borderColor}>
+        <Input
           placeholder="기술 검색"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          focusBorderColor="blue.500"
         />
-      </div>
-      <div className="p-4 max-h-60 overflow-y-auto">
+      </Box>
+      <VStack
+        p="4"
+        maxH="60"
+        overflowY="auto"
+        spacing="2"
+        align="start"
+        divider={<StackDivider borderColor={borderColor} />}
+      >
         {filteredTechs.map((tech) => (
-          <div key={tech} className="flex items-center mb-2">
-            <input
-              type="checkbox"
-              id={tech}
-              checked={selectedTechs.includes(tech)}
-              onChange={() => handleCheckboxChange(tech)}
-              className="mr-2"
-            />
-            <label htmlFor={tech}>{tech}</label>
-          </div>
+          <Checkbox
+            key={tech}
+            isChecked={selectedTechs.includes(tech)}
+            onChange={() => handleCheckboxChange(tech)}
+          >
+            {tech}
+          </Checkbox>
         ))}
-      </div>
-      <div className="p-4 border-t border-gray-300">
-        <strong>선택된 기술:</strong> {selectedTechs.join(", ")}
-      </div>
-    </div>
+      </VStack>
+      <Box p="4" borderTopWidth="1px" borderColor={borderColor}>
+        <Text fontWeight="bold">선택된 기술:</Text> {selectedTechs.join(", ")}
+      </Box>
+    </Box>
   );
 }

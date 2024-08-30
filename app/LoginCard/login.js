@@ -1,6 +1,5 @@
 "use server";
 import { supabase } from "@/utils/supabase/client";
-import { redirect } from "next/navigation";
 export async function Login(formData) {
   const email = formData.get("email");
   const password = formData.get("password");
@@ -10,8 +9,8 @@ export async function Login(formData) {
     password: password,
   });
   if (error) {
-    console.log(error.message);
+    return { success: false, data: error };
   } else {
-    redirect("/dashboard");
+    return { success: true, data: data };
   }
 }

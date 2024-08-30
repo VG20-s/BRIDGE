@@ -9,7 +9,7 @@ const sign = () => {
   const button = useRef();
   const [selectedTechs, setSelectedTechs] = useState([]);
   return (
-    <div className="flex items-center justify-center min-h-screen w-screen bg-gray-900">
+    <div className="flex items-center justify-center min-h-screen bg-gray-900">
       <form action={handleSignUp} className="bg-gray-800 p-8 rounded-lg w-80">
         <h1 className="text-center text-white text-2xl font-bold">
           DevConnect
@@ -48,7 +48,7 @@ const sign = () => {
           />
         </div>
         <input type="hidden" name="stack" value={selectedTechs}></input>
-
+        <input type="hidden" name="sen" value={isSen}></input>
         <div className="flex gap-2">
           <button
             type="button"

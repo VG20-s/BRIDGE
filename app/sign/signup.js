@@ -6,16 +6,9 @@ export async function handleSignUp(formData) {
   const password = formData.get("password");
   const nickname = formData.get("nickname");
   const stack = formData.get("stack");
-  console.log(
-    "이메일:",
-    email,
-    "비밀번호:",
-    password,
-    "닉네임:",
-    nickname,
-    "기술스택 : ",
-    stack
-  );
+  const sen = formData.get("sen");
+  console.log("이메일:", email, "비밀번호:", password, "닉네임:", nickname);
+  console.log(stack);
   if (!email && !password && !nickname) {
     return;
   }
@@ -25,11 +18,13 @@ export async function handleSignUp(formData) {
     options: {
       data: {
         user_name: nickname,
-        sen: true,
-        stack: !stack ? "" : stack?.join(","),
+        sen: sen,
+        stack: sen ? stack : "",
       },
     },
   });
+  console.log(data)
+  console.log(error)
   if (data && !error) {
     redirect("/LoginCard");
   }

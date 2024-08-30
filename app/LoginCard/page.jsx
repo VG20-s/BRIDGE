@@ -1,9 +1,31 @@
+"use client";
 import Link from "next/link";
 import { Login } from "./login";
+import { useRouter } from "next/navigation";
+import { useUserStore } from "@/store/initial";
 const LoginCard = () => {
+  const router = useRouter();
+  const set_user = useUserStore((state) => state.set_user);
+  const handleSubmit = async (e) => {
+    const a = {};
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const result = await Login(formData);
+    if (result.success) {
+      console.log(result.data);
+      set_user(result.data.user.user_metadata);
+      router.push("/Post");
+    } else {
+      console.log(result.data);
+    }
+  };
   return (
-    <div className="flex items-center justify-center min-h-screen w-screen bg-gray-900">
-      <form action={Login} className="bg-gray-800 p-8 rounded-lg w-80">
+    <div className="flex items-center justify-center min-h-screen  bg-gray-900 ">
+      <form
+        onSubmit={handleSubmit}
+        style={{ width: "320px" }}
+        className="bg-gray-800 p-8 rounded-lg"
+      >
         <h1 className="text-center text-white text-2xl font-bold">
           DevConnect
         </h1>
