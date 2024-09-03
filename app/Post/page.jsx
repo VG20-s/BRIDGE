@@ -1,13 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useUserStore } from "@/store/initial";
 import { Box, Button, Input, Tag, Text, Textarea } from "@chakra-ui/react";
 import TechSearchInterface from "@/components/TecListselect";
+import Header from "@/components/Header";
+import Botnav from "@/components/Bottomnav";
 import { Posts } from "./createpost";
 const Post = () => {
-  const { user_Id, user_name, user_sen, user_email } = useUserStore(
-    (state) => state
-  );
+  const { user_Id, user_name } = useUserStore((state) => state);
   const [isOpenstack, setisOpenstack] = useState(false);
   const [selectedTechs, setselectedTechs] = useState([]);
   const submitHandler = (e) => {
@@ -18,6 +18,8 @@ const Post = () => {
       contents: a.get("contents"),
       tags: selectedTechs,
       user_Id: user_Id,
+      dueDate: a.get("endDate"),
+      Nickname: user_name,
     });
     if (!result.success) {
       console.log(result.data);
@@ -29,17 +31,20 @@ const Post = () => {
   };
 
   return (
-    <div>
-      <div className="h-screen flex justify-center w-full">
+    <div className="h-screen flex flex-col justify-between">
+      <Header />
+      <div className=" flex justify-center w-full items-center">
         <form
-          className="flex gap-2 justify-center w-4/5   items-center flex-col bg-slate-100"
+          className="flex gap-2 justify-center w-4/5 gap-4 pt-8 pb-8 rounded-lg items-center flex-col bg-slate-100"
           onSubmit={submitHandler}
           sample
         >
           <Text mb="8px">Title</Text>
-          <Input width={"80%"} name="title" placeholder="타이틀" />
+          <Input width={"80%"} name="title" placeholder="타이틀" required />
           <Text mb="8px">Value</Text>
           <Textarea width={"80%"} name="contents" placeholder="모집 내용" />
+          <Text mb="8px">ENDdate</Text>
+          <Input name="endDate" width={"80%"} type="date" required />
           <Box
             width={"80%"}
             flex
@@ -62,7 +67,7 @@ const Post = () => {
             </div>
           </Box>
           <Button type="submit" variant="outline" colorScheme="blue">
-            Button
+            Create
           </Button>
         </form>
       </div>
@@ -77,6 +82,7 @@ const Post = () => {
           />
         </div>
       )}
+      <Botnav></Botnav>
     </div>
   );
 };

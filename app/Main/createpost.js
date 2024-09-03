@@ -1,7 +1,7 @@
 "use server";
 import { supabase } from "@/utils/supabase/client";
 export async function Posts(Data) {
-  if (!Data.title || !Data.user_Id || !Data.Nickname || !Data.dueDate) {
+  if (!Data.title) {
     return;
   }
   console.log(Data);
@@ -11,8 +11,6 @@ export async function Posts(Data) {
     tags: Data.tags,
     createrId: Data.user_Id,
     isDone: false,
-    dueDate: Data.dueDate,
-    Nickname: Data.Nickname,
   });
   if (error) {
     return { success: false, data: error };
