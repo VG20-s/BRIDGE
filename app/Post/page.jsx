@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useUserStore } from "@/store/initial";
-import { Box, Button, Input, Tag, Text, Textarea } from "@chakra-ui/react";
+import { Badge, Box, Button, Input, Tag, Text, Textarea } from "@chakra-ui/react";
 import TechSearchInterface from "@/components/TecListselect";
 import Header from "@/components/Header";
 import Botnav from "@/components/Bottomnav";
@@ -59,9 +59,9 @@ const Post = () => {
             <div className="flex gap-3 flex-wrap">
               {selectedTechs.map((a, b) => {
                 return (
-                  <Tag key={a} variant="solid">
+                  <Badge key={a} colorScheme="blue">
                     {a}
-                  </Tag>
+                  </Badge>
                 );
               })}
             </div>

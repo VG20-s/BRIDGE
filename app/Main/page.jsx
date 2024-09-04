@@ -1,11 +1,13 @@
 "use client";
-import { Box, Skeleton, SkeletonText } from "@chakra-ui/react";
-import Header from "@/components/Header";
-import Botnav from "@/components/Bottomnav";
-import ProjectDetailModal from "@/components/DataInfo";
 import { postsData } from "@/app/Main/PostsData";
-import { useEffect, useState } from "react";
+import Botnav from "@/components/Bottomnav";
+import ProjectDetailModal from "@/components/PostInfo";
+import Header from "@/components/Header";
 import { ProjectCard } from "@/components/Projectcard";
+import { Box, Skeleton, SkeletonText } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useUserStore } from "@/store/initial";
+
 const Main = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);

@@ -20,50 +20,13 @@ import {
   Box,
   useToast,
 } from "@chakra-ui/react";
-const project = {
-  title: "AI 기반 음악 추천 시스템",
-  description: "사용자의 취향을 학습하여 개인화된 음악을 추천하는 시스템 개발",
-  skills: ["Python", "TensorFlow", "React"],
-  deadline: "2024-10-15",
-};
-const ProjectDetailModal = ({ isOpen, onClose }) => {
-  const [comment, setComment] = useState("");
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [likes, setLikes] = useState(0);
-  const toast = useToast();
-
-  const handleFollow = () => {
-    setIsFollowing(!isFollowing);
-    toast({
-      title: isFollowing ? "팔로우 취소" : "팔로우 완료",
-      status: "success",
-      duration: 2000,
-      isClosable: true,
-    });
+import { useUserStore } from "@/store/initial";
+import { Likes ,GetLikes} from "@/api/getLike";
+const ProjectDetailModal = ({ project, isOpen, onClose }) => {
+  const { user_name, user_Id } = useUserStore((state) => state);
+  const SubmitLike = () => {
+    Likes({ user_Id: user_Id, id: project.id });
   };
-
-  const handleLike = () => {
-    setLikes(likes + 1);
-    toast({
-      title: "좋아요!",
-      status: "success",
-      duration: 2000,
-      isClosable: true,
-    });
-  };
-
-  const handleComment = () => {
-    if (comment.trim()) {
-      toast({
-        title: "댓글이 등록되었습니다.",
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-      });
-      setComment("");
-    }
-  };
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
@@ -72,16 +35,16 @@ const ProjectDetailModal = ({ isOpen, onClose }) => {
         <ModalCloseButton />
         <ModalBody>
           <VStack align="stretch" spacing={4}>
-            <Text>{project?.description}</Text>
+            <Text>{project?.contents}</Text>
             <HStack>
-              {project?.skills.map((skill, index) => (
-                <Badge key={index} colorScheme="blue">
+              {project?.tags.map((skill, index) => (
+                <Badge key={skill} colorScheme="blue">
                   {skill}
                 </Badge>
               ))}
             </HStack>
             <Text fontSize="sm" color="gray.500">
-              마감일: {project?.deadline}
+              마감일: {project?.dueDate ? project?.dueDate : "마감기한 없음"}
             </Text>
 
             <Divider />
@@ -89,11 +52,11 @@ const ProjectDetailModal = ({ isOpen, onClose }) => {
             <Flex justify="space-between" align="center">
               <HStack>
                 <Button
-                  onClick={handleLike}
+                  onClick={() => SubmitLike()}
                   colorScheme="red"
                   variant="outline"
                 >
-                  좋아요 ({likes})
+                  좋아요
                 </Button>
               </HStack>
             </Flex>
@@ -103,24 +66,18 @@ const ProjectDetailModal = ({ isOpen, onClose }) => {
             <VStack align="stretch" spacing={3}>
               <Text fontWeight="bold">댓글</Text>
               <HStack>
-                <Avatar size="sm" name="User" />
-                <Input
-                  placeholder="댓글을 입력하세요..."
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                />
-                <Button onClick={handleComment} colorScheme="blue">
-                  등록
-                </Button>
+                <Avatar size="sm" name={user_name} />
+                <Input placeholder="댓글을 입력하세요..." />
+                <Button colorScheme="blue">등록</Button>
               </HStack>
 
               <Box maxH="200px" overflowY="auto">
                 <VStack align="stretch" spacing={2}>
                   <Flex>
-                    <Avatar size="sm" name="John Doe" mr={2} />
+                    <Avatar size="sm" name="박광열" mr={2} />
                     <Box>
                       <Text fontWeight="bold" fontSize="sm">
-                        John Doe
+                        박광열
                       </Text>
                       <Text fontSize="sm">
                         흥미로운 프로젝트네요! 참여하고 싶습니다.
@@ -144,3 +101,14 @@ const ProjectDetailModal = ({ isOpen, onClose }) => {
 };
 
 export default ProjectDetailModal;
+
+//  const toast = useToast();
+// const handleFollow = () => {
+//   setIsFollowing(!isFollowing);
+//   toast({
+//     title: isFollowing ? "팔로우 취소" : "팔로우 완료",
+//     status: "success",
+//     duration: 2000,
+//     isClosable: true,
+//   });
+// };

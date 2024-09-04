@@ -2,7 +2,8 @@
 
 import { createContext, useRef, useContext } from "react";
 import { useStore } from "zustand";
-import { createUserStore } from "./user";
+import { createUserStore } from "../utils/user";
+import { createLikesStore } from "./Likes";
 export const UserStoreContext = createContext(undefined);
 
 export const CounterStoreProvider = ({ children }) => {
