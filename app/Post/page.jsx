@@ -1,7 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useUserStore } from "@/store/initial";
-import { Badge, Box, Button, Input, Tag, Text, Textarea } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Button,
+  Input,
+  Tag,
+  Text,
+  Textarea,
+} from "@chakra-ui/react";
 import TechSearchInterface from "@/components/TecListselect";
 import Header from "@/components/Header";
 import Botnav from "@/components/Bottomnav";

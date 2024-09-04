@@ -1,4 +1,4 @@
-"use client";
+// "use sever";
 import React, { useState } from "react";
 import {
   Modal,
@@ -20,12 +20,16 @@ import {
   Box,
   useToast,
 } from "@chakra-ui/react";
-import { useUserStore } from "@/store/initial";
-import { Likes ,GetLikes} from "@/api/getLike";
+import { useLikeStore, useUserStore } from "@/store/initial";
+import { Likes, disLikes } from "@/api/getLike";
 const ProjectDetailModal = ({ project, isOpen, onClose }) => {
   const { user_name, user_Id } = useUserStore((state) => state);
+  const { LikeList } = useLikeStore((store) => store);
   const SubmitLike = () => {
     Likes({ user_Id: user_Id, id: project.id });
+  };
+  const SubmitDisLike = () => {
+    disLikes({ user_Id: user_Id, id: project.id });
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
@@ -52,7 +56,11 @@ const ProjectDetailModal = ({ project, isOpen, onClose }) => {
             <Flex justify="space-between" align="center">
               <HStack>
                 <Button
-                  onClick={() => SubmitLike()}
+                  onClick={
+                    LikeList?.includes(project?.id)
+                      ? () => SubmitDisLike()
+                      : () => SubmitLike()
+                  }
                   colorScheme="red"
                   variant="outline"
                 >
@@ -68,7 +76,9 @@ const ProjectDetailModal = ({ project, isOpen, onClose }) => {
               <HStack>
                 <Avatar size="sm" name={user_name} />
                 <Input placeholder="댓글을 입력하세요..." />
-                <Button colorScheme="blue">등록</Button>
+                <Button color={"ghost"} colorScheme="blue">
+                  등록
+                </Button>
               </HStack>
 
               <Box maxH="200px" overflowY="auto">
@@ -79,9 +89,7 @@ const ProjectDetailModal = ({ project, isOpen, onClose }) => {
                       <Text fontWeight="bold" fontSize="sm">
                         박광열
                       </Text>
-                      <Text fontSize="sm">
-                        흥미로운 프로젝트네요! 참여하고 싶습니다.
-                      </Text>
+                      <Text fontSize="sm">올때 메로나</Text>
                     </Box>
                   </Flex>
                 </VStack>
@@ -90,7 +98,7 @@ const ProjectDetailModal = ({ project, isOpen, onClose }) => {
           </VStack>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={onClose}>
+          <Button color={"ghost"} colorScheme="blue" mr={3} onClick={onClose}>
             닫기
           </Button>
           <Button variant="ghost">프로젝트 지원하기</Button>

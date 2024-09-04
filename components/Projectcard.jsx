@@ -1,6 +1,5 @@
 import { Box, Heading, Text, Badge, Flex, Modal } from "@chakra-ui/react";
 export const ProjectCard = ({ title, contents, tags, dueDate }) => {
-  console.log(title, contents, tags, dueDate);
   return (
     <Box
       borderWidth="1px"

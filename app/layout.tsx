@@ -1,7 +1,7 @@
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import { Providers } from "./provider.jsx";
-import { CounterStoreProvider } from "../store/initial.jsx";
+import { CounterStoreProvider, LikeStoreProvider } from "../store/initial.jsx";
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:3000";
@@ -21,11 +21,13 @@ export default function RootLayout({
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
         <main className="min-h-screen flex flex-col items-center bg-gray-900">
-          <CounterStoreProvider>
-            <Providers>
-              <div style={{ width: "600px" }}>{children}</div>
-            </Providers>
-          </CounterStoreProvider>
+          <LikeStoreProvider>
+            <CounterStoreProvider>
+              <Providers>
+                <div style={{ width: "600px" }}>{children}</div>
+              </Providers>
+            </CounterStoreProvider>
+          </LikeStoreProvider>
         </main>
       </body>
     </html>

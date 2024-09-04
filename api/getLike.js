@@ -1,14 +1,15 @@
 "use server";
 import { supabase } from "@/utils/supabase/client";
-export async function postsData() {
+export async function getLikes(user_Id) {
+  console.log(user_Id);
   const { data, error } = await supabase
     .from("Like")
-    .select("name, countries(*)")
-    .eq("countries.name", "Estonia");
+    .select("postId")
+    .eq("userId", user_Id);
   if (error) {
-    return { success: false, data: error };
+    return { isError: true, data: data };
   } else {
-    return { success: true, data: data };
+    return { isError: false, data: data };
   }
 }
 export async function Likes(Data) {
@@ -26,8 +27,9 @@ export async function disLikes(Data) {
   if (!Data.id || !Data.user_Id) {
     return;
   }
-  const { data, error } = await supabase.from("Like").delete.match({
-    postId: Data.id,
-    userId: Data.user_Id,
-  });
-} 
+  const { data, error } = await supabase
+    .from("Like")
+    .delete()
+    .eq("postId", Data.id)
+    .eq("userId", Data.user_Id);
+}

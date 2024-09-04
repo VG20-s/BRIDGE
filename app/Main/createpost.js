@@ -4,7 +4,6 @@ export async function Posts(Data) {
   if (!Data.title) {
     return;
   }
-  console.log(Data);
   const { data, error } = await supabase.from("Posts").insert({
     title: Data.title,
     contents: Data.contents,
