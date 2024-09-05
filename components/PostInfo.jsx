@@ -22,14 +22,17 @@ import {
 } from "@chakra-ui/react";
 import { useLikeStore, useUserStore } from "@/store/initial";
 import { Likes, disLikes } from "@/api/getLike";
+import { mutate } from "swr";
 const ProjectDetailModal = ({ project, isOpen, onClose }) => {
   const { user_name, user_Id } = useUserStore((state) => state);
   const { LikeList } = useLikeStore((store) => store);
   const SubmitLike = () => {
-    Likes({ user_Id: user_Id, id: project.id });
+   Likes({ user_Id: user_Id, id: project.id });
+    mutate(["likes", user_Id]);
   };
   const SubmitDisLike = () => {
     disLikes({ user_Id: user_Id, id: project.id });
+    mutate(["likes", user_Id]);
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">

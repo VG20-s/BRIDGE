@@ -6,8 +6,7 @@ import Header from "@/components/Header";
 import { ProjectCard } from "@/components/Projectcard";
 import { Box, Skeleton, SkeletonText } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useUserStore } from "@/store/initial";
-import { getLikes, disLikes } from "@/api/getLike";
+import { useLike } from "@/api/useLike";
 import { useLikeStore } from "@/store/initial";
 
 const Main = () => {
@@ -15,21 +14,24 @@ const Main = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [postData, setpostData] = useState(null);
   const [isLoading, setisLoading] = useState(false);
-  const { user_Id } = useUserStore((store) => store);
   const set_Likes = useLikeStore((store) => store.set_Likes);
+  const { data, isError } = useLike();
   useEffect(() => {
     const fetchData = async () => {
       const a = await postsData();
-      const b = await getLikes(user_Id);
-      if (!b?.isError) {
-        set_Likes(b);
-        console.log(b);
-      }
       setpostData(a);
       setisLoading(true);
     };
     fetchData();
-  }, [user_Id]);
+  }, []);
+
+  useEffect(() => {
+    console.log("아무것도모름");
+    if (!isError) {
+      set_Likes(data);
+      console.log(data);
+    }
+  }, [data, isError, set_Likes]);
   const openModal = (project) => {
     setSelectedProject(project);
     setIsModalOpen(true);

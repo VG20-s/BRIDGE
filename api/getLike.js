@@ -1,7 +1,6 @@
 "use server";
 import { supabase } from "@/utils/supabase/client";
 export async function getLikes(user_Id) {
-  console.log(user_Id);
   const { data, error } = await supabase
     .from("Like")
     .select("postId")
