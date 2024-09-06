@@ -3,8 +3,9 @@ import { supabase } from "@/utils/supabase/client";
 export async function postsData(PostId) {
   const { data, error } = await supabase
     .from("comments")
-    .select("id,comment,username")
+    .select("*")
     .eq("postId", PostId);
+  console.log(data);
   if (error) {
     return { success: false, data: error };
   } else {
@@ -29,8 +30,8 @@ export async function deleteComments(Data) {
     return;
   }
   const { data, error } = await supabase
-    .from("Like")
+    .from("comments")
     .delete()
-    .eq("postId", Data.id)
+    .eq("id", Data.id)
     .eq("userId", Data.user_Id);
 }

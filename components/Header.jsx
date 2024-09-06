@@ -5,7 +5,7 @@ const Header = () => {
     <Box
       bg="white"
       w="100%"
-      h={"5%"}
+      h={"60px"}
       alignItems={"center"}
       color={"black"}
       display={"flex"}

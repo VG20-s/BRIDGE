@@ -39,19 +39,17 @@ const ProjectDetailModal = ({ project, isOpen, onClose }) => {
             </Text>
             <Divider />
             <Flex justify="space-between" align="center">
-              <HStack>
-                <LikeButton project_id={project?.id}></LikeButton>
-              </HStack>
+              <LikeButton project_id={project?.id}></LikeButton>
+              <Button variant="ghost">프로젝트 지원하기</Button>
             </Flex>
             <Divider />
-            <Commnets postId={project?.id}/>
+            <Commnets postId={project?.id} />
           </VStack>
         </ModalBody>
         <ModalFooter>
           <Button color={"ghost"} colorScheme="blue" mr={3} onClick={onClose}>
             닫기
           </Button>
-          <Button variant="ghost">프로젝트 지원하기</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

@@ -45,7 +45,6 @@ const Post = () => {
         <form
           className="flex gap-2 justify-center w-4/5 gap-4 pt-8 pb-8 rounded-lg items-center flex-col bg-slate-100"
           onSubmit={submitHandler}
-          sample
         >
           <Text mb="8px">Title</Text>
           <Input width={"80%"} name="title" placeholder="타이틀" required />
