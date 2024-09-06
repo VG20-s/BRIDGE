@@ -19,17 +19,20 @@ import {
   AlertDialogBody,
   AlertDialogFooter,
 } from "@chakra-ui/react";
-import { postCommnets, deleteComments } from "@/api/getcomments";
+import { postCommnets, deleteComments, editComments } from "@/api/getcomments";
 import { useComments } from "@/api/useComments";
 import { useUserStore } from "@/store/initial";
 import { mutate } from "swr";
-const Commnets = ({ postId }) => {
+const Commnets = ({ postId, postOwner }) => {
   const { user_name, user_Id } = useUserStore((state) => state);
   const comments = useRef();
   const cancelRef = useRef();
+  const editinput = useRef();
   const [issending, setissending] = useState(false);
   const { data, isLoading } = useComments(postId);
   const [isopen, setisopen] = useState(false);
+  const [isEdit, setisEdit] = useState(false);
+  const [targetData, settargetData] = useState(false);
   const toast = useToast();
   const Postcom = async () => {
     if (issending) return;
@@ -48,6 +51,7 @@ const Commnets = ({ postId }) => {
       isClosable: true,
     });
     mutate(["Comments", postId]);
+    comments.current.value=""
   };
   const delCom = async (id) => {
     if (issending) return;
@@ -60,6 +64,21 @@ const Commnets = ({ postId }) => {
       duration: 2000,
       isClosable: true,
     });
+    mutate(["Comments", postId]);
+  };
+  const editData = async (id) => {
+    if (issending) return;
+    if (targetData == editinput.current.value) return;
+    setissending(true);
+    await editComments({ id, data: { comment: editinput.current.value } });
+    setissending(false);
+    toast({
+      title: "댓글 수정완료",
+      status: "success",
+      duration: 2000,
+      isClosable: true,
+    });
+    setisEdit(false);
     mutate(["Comments", postId]);
   };
   return (
@@ -88,32 +107,56 @@ const Commnets = ({ postId }) => {
               <VStack align="stretch" spacing={2}>
                 <Flex justifyContent={"space-between"} pr={"10px"}>
                   <Flex>
-                    <Avatar size="sm" name={a.username  } mr={2} />
+                    <Avatar size="sm" name={a.username} mr={2} />
                     <Box>
                       <Text fontWeight="bold" fontSize="sm">
                         {a.username}
                       </Text>
-                      <Text fontSize="sm">{a.comment}</Text>
+                      {isEdit == a.id ? (
+                        <Flex>
+                          <Input
+                            ref={editinput}
+                            fontSize="sm"
+                            w={"300px"}
+                            defaultValue={a.comment}
+                          ></Input>
+                          <Button onClick={() => editData(a.id)}>수정</Button>
+                        </Flex>
+                      ) : (
+                        <Text fontSize="sm">{a.comment}</Text>
+                      )}
                     </Box>
                   </Flex>
-                  {a.userId == user_Id && (
-                    <Box onClick={() => setisopen(true)} cursor={"pointer"}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        className="size-6"
+                  <Flex alignItems={"center"}>
+                    {a.userId == user_Id && (
+                      <Button
+                        onClick={() => {
+                          setisEdit((prevstate) => (prevstate ? false : a.id));
+                          settargetData(a.comment);
+                        }}
                       >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M6 18 18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </Box>
-                  )}
+                        {isEdit == a.id?"취소":"수정"}
+                      </Button>
+                    )}
+                    {(a.userId == user_Id || postOwner == user_Id) && (
+                      <Box onClick={() => setisopen(true)} cursor={"pointer"}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          className="size-6"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M6 18 18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </Box>
+                    )}
+                  </Flex>
                   <AlertDialog
                     motionPreset="slideInBottom"
                     leastDestructiveRef={cancelRef}

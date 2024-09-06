@@ -4,7 +4,8 @@ export async function postsData(PostId) {
   const { data, error } = await supabase
     .from("comments")
     .select("*")
-    .eq("postId", PostId);
+    .eq("postId", PostId)
+    .order("id");
   console.log(data);
   if (error) {
     return { success: false, data: error };
@@ -34,4 +35,14 @@ export async function deleteComments(Data) {
     .delete()
     .eq("id", Data.id)
     .eq("userId", Data.user_Id);
+}
+export async function editComments(Data) {
+  console.log(Data);
+  if (!Data.id || !Data.data) {
+    return;
+  }
+  const { data, error } = await supabase
+    .from("comments")
+    .update(Data.data)
+    .eq("id", Data.id);
 }

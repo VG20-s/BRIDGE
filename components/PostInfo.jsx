@@ -43,7 +43,7 @@ const ProjectDetailModal = ({ project, isOpen, onClose }) => {
               <Button variant="ghost">프로젝트 지원하기</Button>
             </Flex>
             <Divider />
-            <Commnets postId={project?.id} />
+            <Commnets postId={project?.id} postOwner={project?.createrId}/>
           </VStack>
         </ModalBody>
         <ModalFooter>
