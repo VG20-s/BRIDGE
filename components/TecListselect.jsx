@@ -73,7 +73,7 @@ export default function TechSearchInterface({
       borderColor={borderColor}
       boxShadow="sm"
       bg={bgColor}
-      onClick={(e) => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()} // 클릭 이벤트 전달 차단
     >
       <Box p="4" borderBottomWidth="1px" borderColor={borderColor}>
         <Input
@@ -85,8 +85,9 @@ export default function TechSearchInterface({
       </Box>
       <VStack
         p="4"
-        maxH="60"
+        maxH="240px"
         overflowY="auto"
+        overflowX="hidden"  // 가로 스크롤을 차단하여 세로 스크롤에만 집중
         spacing="2"
         align="start"
         divider={<StackDivider borderColor={borderColor} />}

@@ -22,17 +22,19 @@ import {
 import { postCommnets, deleteComments, editComments } from "@/api/getcomments";
 import { useComments } from "@/api/useComments";
 import { useUserStore } from "@/store/initial";
+import AlertDelete from "./alertDelete";
 import { mutate } from "swr";
 const Commnets = ({ postId, postOwner }) => {
   const { user_name, user_Id } = useUserStore((state) => state);
   const comments = useRef();
   const cancelRef = useRef();
   const editinput = useRef();
-  const [issending, setissending] = useState(false);
-  const { data, isLoading } = useComments(postId);
+  const delTarget = useRef();
   const [isopen, setisopen] = useState(false);
   const [isEdit, setisEdit] = useState(false);
+  const [issending, setissending] = useState(false);
   const [targetData, settargetData] = useState(false);
+  const { data, isLoading } = useComments(postId);
   const toast = useToast();
   const Postcom = async () => {
     if (issending) return;
@@ -51,7 +53,7 @@ const Commnets = ({ postId, postOwner }) => {
       isClosable: true,
     });
     mutate(["Comments", postId]);
-    comments.current.value=""
+    comments.current.value = "";
   };
   const delCom = async (id) => {
     if (issending) return;
@@ -91,7 +93,6 @@ const Commnets = ({ postId, postOwner }) => {
           등록
         </Button>
       </HStack>
-
       {isLoading ? (
         <>
           {[...Array(5)].map((_, index) => (
@@ -135,69 +136,47 @@ const Commnets = ({ postId, postOwner }) => {
                           settargetData(a.comment);
                         }}
                       >
-                        {isEdit == a.id?"취소":"수정"}
+                        {isEdit == a.id ? "취소" : "수정"}
                       </Button>
                     )}
                     {(a.userId == user_Id || postOwner == user_Id) && (
-                      <Box onClick={() => setisopen(true)} cursor={"pointer"}>
+                      <Box
+                        onClick={() => {
+                          setisopen(true);
+                          delTarget.current = a.id;
+                        }}
+                        cursor={"pointer"}
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
                           viewBox="0 0 24 24"
-                          stroke-width="1.5"
+                          strokeWidth="1.5"
                           stroke="currentColor"
                           className="size-6"
                         >
                           <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             d="M6 18 18 6M6 6l12 12"
                           />
                         </svg>
                       </Box>
                     )}
                   </Flex>
-                  <AlertDialog
-                    motionPreset="slideInBottom"
-                    leastDestructiveRef={cancelRef}
-                    onClose={() => setisopen(true)}
-                    isOpen={isopen}
-                    isCentered
-                  >
-                    <AlertDialogOverlay />
-
-                    <AlertDialogContent>
-                      <AlertDialogHeader>댓글 삭제</AlertDialogHeader>
-                      <AlertDialogCloseButton />
-                      <AlertDialogBody>
-                        진짜 댓글을 삭제하시겠습니까?
-                      </AlertDialogBody>
-                      <AlertDialogFooter>
-                        <Button
-                          ref={cancelRef}
-                          onClick={() => setisopen(false)}
-                        >
-                          No
-                        </Button>
-                        <Button
-                          color="red"
-                          onClick={() => {
-                            delCom(a.id);
-                            setisopen(false);
-                          }}
-                          ml={3}
-                        >
-                          Yes
-                        </Button>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
                 </Flex>
               </VStack>
             </Box>
           );
         })
       )}
+      <AlertDelete
+        ref={cancelRef}
+        delCom={delCom}
+        id={delTarget.current}
+        isopen={isopen}
+        setisopen={setisopen}
+      ></AlertDelete>
     </VStack>
   );
 };
