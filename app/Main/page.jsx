@@ -39,7 +39,7 @@ const Main = () => {
   return (
     <div className="h-screen flex flex-col justify-between">
       <Header />
-      <div className="overflow-auto pt-4 flex justify-start flex-col h-full">
+      <div className="overflow-auto pt-4 flex justify-start flex-col h-full custom-scrollbar">
         {!isLoading ? (
           <>
             {[...Array(5)].map((_, index) => (

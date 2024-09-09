@@ -29,6 +29,7 @@ const Post = () => {
       dueDate: a.get("endDate"),
       Nickname: user_name,
     });
+    console.log(result)
     if (!result.success) {
       console.log(result.data);
       setselectedTechs([]);

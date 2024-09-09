@@ -45,34 +45,34 @@ const techStacks = [
 ];
 
 export default function TechSearchInterface({
-  selectedTechs,
+  selectedTechs = [],
   setSelectedTechs,
 }) {
   const [searchTerm, setSearchTerm] = useState("");
-
+  console.log(selectedTechs);
   const filteredTechs = techStacks.filter((tech) =>
     tech.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleCheckboxChange = (tech) => {
-    setSelectedTechs((prev) =>
-      prev.includes(tech) ? prev.filter((t) => t !== tech) : [...prev, tech]
-    );
+    const newData = selectedTechs.includes(tech)
+      ? selectedTechs.filter((t) => t !== tech)
+      : [...selectedTechs, tech];
+    setSelectedTechs(newData);
   };
 
   const borderColor = useColorModeValue("gray.300", "gray.600");
-  const bgColor = useColorModeValue("gray.200", "gray.700");
 
   return (
     <Box
-      w="80"
+      minW={"400PX"}
       mx="auto"
       mt="8"
       borderWidth="1px"
       borderRadius="lg"
       borderColor={borderColor}
       boxShadow="sm"
-      bg={bgColor}
+      bg={"#FFF"}
       onClick={(e) => e.stopPropagation()} // 클릭 이벤트 전달 차단
     >
       <Box p="4" borderBottomWidth="1px" borderColor={borderColor}>
@@ -87,7 +87,6 @@ export default function TechSearchInterface({
         p="4"
         maxH="240px"
         overflowY="auto"
-        overflowX="hidden"  // 가로 스크롤을 차단하여 세로 스크롤에만 집중
         spacing="2"
         align="start"
         divider={<StackDivider borderColor={borderColor} />}

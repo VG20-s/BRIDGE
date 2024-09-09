@@ -14,6 +14,7 @@ export async function Posts(Data) {
     dueDate: Data.dueDate,
     Nickname: Data.Nickname,
   });
+  console.log(error)
   if (error) {
     return { success: false, data: error };
   } else {
