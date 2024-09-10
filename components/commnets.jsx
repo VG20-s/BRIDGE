@@ -20,6 +20,7 @@ import {
   AlertDialogFooter,
 } from "@chakra-ui/react";
 import { postCommnets, deleteComments, editComments } from "@/api/getcomments";
+import { UserBadge } from "@/components/userInfo";
 import { useComments } from "@/api/useComments";
 import { useUserStore } from "@/store/initial";
 import AlertDelete from "./alertDelete";
@@ -108,7 +109,8 @@ const Commnets = ({ postId, postOwner }) => {
               <VStack align="stretch" spacing={2}>
                 <Flex justifyContent={"space-between"} pr={"10px"}>
                   <Flex>
-                    <Avatar size="sm" name={a.username} mr={2} />
+                    <UserBadge data={a}>
+                    </UserBadge>
                     <Box>
                       <Text fontWeight="bold" fontSize="sm">
                         {a.username}

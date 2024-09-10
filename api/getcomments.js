@@ -3,7 +3,7 @@ import { supabase } from "@/utils/supabase/client";
 export async function postsData(PostId) {
   const { data, error } = await supabase
     .from("comments")
-    .select("*")
+    .select("*,user(email)")
     .eq("postId", PostId)
     .order("id");
   if (error) {
@@ -33,7 +33,6 @@ export async function deleteComments(Data) {
     .from("comments")
     .delete()
     .eq("id", Data.id);
-  // .eq("userId", Data.user_Id);
 }
 export async function editComments(Data) {
   console.log(Data);
