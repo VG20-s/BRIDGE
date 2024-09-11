@@ -15,13 +15,14 @@ import {
 import { useUserStore } from "@/store/initial";
 import Botnav from "@/components/Bottomnav";
 import Link from "next/link";
+import { getrooms, createRooms } from "@/api/useRooms";
 
 const initialMessages = [
-  { id: 1, sender: "User1", content: "안녕하세요!", timestamp: "10:00" },
-  { id: 2, sender: "User2", content: "네, 안녕하세요!", timestamp: "10:01" },
+  // { id: 1, sender: "User1", content: "안녕하세요!", timestamp: "10:00" },
+  // { id: 2, sender: "User2", content: "네, 안녕하세요!", timestamp: "10:01" },
 ];
 
-const ChatRoom = ({ roomId }) => {
+const ChatRoom = () => {
   const [messages, setMessages] = useState(initialMessages);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);

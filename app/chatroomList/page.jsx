@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   VStack,
@@ -12,56 +12,25 @@ import {
   Input,
   IconButton,
   Badge,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useUserStore } from "@/store/initial";
 import Botnav from "@/components/Bottomnav";
 import Header from "@/components/Header";
-
-const initialChatRooms = [
-  {
-    id: 1,
-    name: "프로젝트 A 팀",
-    lastMessage: "회의 시간 조정했습니다.",
-    unreadCount: 3,
-    timestamp: "14:30",
-  },
-  {
-    id: 2,
-    name: "마케팅 부서",
-    lastMessage: "새 캠페인 아이디어 있으신가요?",
-    unreadCount: 0,
-    timestamp: "어제",
-  },
-  {
-    id: 3,
-    name: "점심 메이트",
-    lastMessage: "오늘 점심 뭐 먹을까요?",
-    unreadCount: 5,
-    timestamp: "09:15",
-  },
-];
+// import { createRooms } from "@/api/useRooms";
+import { useGetrooms } from "@/api/useROOmms";
+import Link from "next/link";
 
 const ChatRoomListPage = () => {
-  const [chatRooms, setChatRooms] = useState(initialChatRooms);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedRoom, setSelectedRoom] = useState(null);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user_Id } = useUserStore((state) => state);
-
+  // const { user_Id } = useUserStore((state) => state);
+  const { data } = useGetrooms();
   const bgColor = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.600");
 
-
-  const filteredChatRooms = chatRooms.filter((room) =>
-    room.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const handleRoomSelect = (room) => {
-    setSelectedRoom(room);
-    onOpen();
-  };
+  // const filteredChatRooms = chatRooms?.filter((room) =>
+  //   room.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
 
   return (
     <div className="h-screen flex flex-col justify-between">
@@ -94,32 +63,33 @@ const ChatRoomListPage = () => {
               divider={<Divider />}
               align="stretch"
             >
-              {filteredChatRooms.map((room) => (
-                <Flex
-                  key={room.id}
-                  p={4}
-                  _hover={{ bg: "gray.100" }}
-                  cursor="pointer"
-                  onClick={() => handleRoomSelect(room)}
-                >
-                  <Avatar size="md" name={room.name} mr={3} />
-                  <Box flex={1}>
-                    <Flex justify="space-between" align="baseline">
-                      <Text fontWeight="bold">{room.name}</Text>
-                      <Text fontSize="xs" color="gray.500">
-                        {room.timestamp}
+              {data.data?.map((room) => (
+                <Link href={`chatroom/${room.id}`}>
+                  <Flex
+                    key={room.id}
+                    p={4}
+                    _hover={{ bg: "gray.100" }}
+                    cursor="pointer"
+                  >
+                    <Avatar size="md" name={room.id + " "} mr={3} />
+                    <Box flex={1}>
+                      <Flex justify="space-between" align="baseline">
+                        <Text fontWeight="bold">{room.id}</Text>
+                        <Text fontSize="xs" color="gray.500">
+                          {room.id}
+                        </Text>
+                      </Flex>
+                      <Text fontSize="sm" color="gray.500" noOfLines={1}>
+                        {room.id}
                       </Text>
-                    </Flex>
-                    <Text fontSize="sm" color="gray.500" noOfLines={1}>
-                      {room.lastMessage}
-                    </Text>
-                  </Box>
-                  {room.unreadCount > 0 && (
-                    <Badge colorScheme="red" borderRadius="full" ml={2}>
-                      {room.unreadCount}
-                    </Badge>
-                  )}
-                </Flex>
+                    </Box>
+                    {room.unreadCount > 0 && (
+                      <Badge colorScheme="red" borderRadius="full" ml={2}>
+                        {room.id}
+                      </Badge>
+                    )}
+                  </Flex>
+                </Link>
               ))}
             </VStack>
           </VStack>

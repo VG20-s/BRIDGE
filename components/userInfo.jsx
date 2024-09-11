@@ -15,10 +15,22 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useUserStore } from "@/store/initial";
-
+import { getrooms, createRooms } from "@/api/useRooms";
+import { useRouter } from "next/navigation";
 export const UserBadge = ({ data }) => {
+  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user_Id } = useUserStore((state) => state);
+  const Message = async () => {
+    console.log(user_Id, data.userId);
+    const a = await getrooms([user_Id, data.userId]);
+    if (a.data.length > 0) {
+      router.push(`chatroom/${a.data[0].id}`);
+    } else {
+      const b = await createRooms([user_Id, data.userId]);
+      router.push(`chatroom/${b[0].id}`);
+    }
+  };
   return (
     <>
       <Box
@@ -52,9 +64,7 @@ export const UserBadge = ({ data }) => {
                 <Button
                   colorScheme="blue"
                   color={"black"}
-                  onClick={() => {
-                    console.log("메시지 보내기 클릭");
-                  }}
+                  onClick={() => Message()}
                 >
                   메시지 보내기
                 </Button>

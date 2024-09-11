@@ -42,6 +42,9 @@ const techStacks = [
   "FastAPI",
   "Golang",
   "PHP",
+  //design
+  "Figma",
+  "photoshop"
 ];
 
 export default function TechSearchInterface({
