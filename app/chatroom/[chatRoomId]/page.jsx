@@ -15,22 +15,70 @@ import {
 import { useUserStore } from "@/store/initial";
 import Botnav from "@/components/Bottomnav";
 import Link from "next/link";
-import { getrooms, createRooms } from "@/api/useRooms";
+import { createClient } from "@supabase/supabase-js";
+import { usePathname } from "next/navigation";
 
-const initialMessages = [
-  // { id: 1, sender: "User1", content: "안녕하세요!", timestamp: "10:00" },
-  // { id: 2, sender: "User2", content: "네, 안녕하세요!", timestamp: "10:01" },
-];
+// Supabase setup
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
 
 const ChatRoom = () => {
-  const [messages, setMessages] = useState(initialMessages);
+  const chatRoomId = usePathname().split("/")[2];
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [isSending, setisSending] = useState(false);
   const messagesEndRef = useRef(null);
   const { user_Id, user_name } = useUserStore((state) => state);
 
   const bgColor = useColorModeValue("gray.100", "gray.700");
   const borderColor = useColorModeValue("gray.200", "gray.600");
 
+  useEffect(() => {
+    if (!chatRoomId) return;
+    console.log(chatRoomId);
+    // Fetch initial messages
+    const fetchMessages = async () => {
+      const { data, error } = await supabase
+        .from("chat")
+        .select("*")
+        .eq("roomId", chatRoomId)
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        console.error("Error fetching messages:", error);
+      } else {
+        console.log(data);
+        setMessages(data);
+      }
+    };
+
+    fetchMessages();
+
+    // Real-time message subscription
+    const channel = supabase
+      .channel(`chat`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "chat",
+          filter: `roomId=eq.${chatRoomId}`,
+        },
+        (payload) => {
+          console.log(payload);
+          const newMessage = payload.new;
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [chatRoomId]);
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -39,19 +87,25 @@ const ChatRoom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleSendMessage = () => {
-    if (newMessage.trim() !== "") {
-      const message = {
-        id: messages.length + 1,
-        sender: user_name,
+  // Send message function
+  const handleSendMessage = async () => {
+    if (!newMessage.trim() || isSending) return;
+    setisSending(true);
+    const { error } = await supabase.from("chat").insert([
+      {
+        roomId: chatRoomId,
         content: newMessage,
-        timestamp: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
-      setMessages([...messages, message]);
+        userId: user_Id, // Include sender name
+        read: false,
+      },
+    ]);
+
+    if (error) {
+      console.error("Failed to send message:", error);
+      setisSending(false);
+    } else {
       setNewMessage("");
+      setisSending(false);
     }
   };
 
@@ -84,9 +138,6 @@ const ChatRoom = () => {
                 />
               </svg>
             </Link>
-            <Text fontSize="xl" fontWeight="bold">
-              Chat Room #{roomId}
-            </Text>
           </Flex>
           <VStack
             flex={1}
@@ -100,13 +151,11 @@ const ChatRoom = () => {
             {messages.map((message) => (
               <Flex
                 key={message.id}
-                justify={
-                  message.sender === user_name ? "flex-end" : "flex-start"
-                }
+                justify={message.userId === user_Id ? "flex-end" : "flex-start"}
               >
                 <HStack
                   maxW="70%"
-                  bg={message.sender === user_name ? "blue.100" : "gray.100"}
+                  bg={message.sender === user_Id ? "blue.100" : "gray.100"}
                   p={2}
                   borderRadius="lg"
                   spacing={2}
@@ -120,7 +169,10 @@ const ChatRoom = () => {
                     </Text>
                     <Text>{message.content}</Text>
                     <Text fontSize="xs" color="gray.500">
-                      {message.timestamp}
+                      {new Date(message.created_at).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </Text>
                   </VStack>
                 </HStack>
@@ -143,6 +195,7 @@ const ChatRoom = () => {
               color={"black"}
               colorScheme="blue"
               onClick={handleSendMessage}
+              disabled={!isSending}
             >
               전송
             </Button>

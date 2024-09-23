@@ -17,7 +17,6 @@ import { SearchIcon } from "@chakra-ui/icons";
 import { useUserStore } from "@/store/initial";
 import Botnav from "@/components/Bottomnav";
 import Header from "@/components/Header";
-// import { createRooms } from "@/api/useRooms";
 import { useGetrooms } from "@/api/useROOmms";
 import Link from "next/link";
 
@@ -25,12 +24,11 @@ const ChatRoomListPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   // const { user_Id } = useUserStore((state) => state);
   const { data } = useGetrooms();
+  console.log(data)
   const bgColor = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.600");
 
-  // const filteredChatRooms = chatRooms?.filter((room) =>
-  //   room.name.toLowerCase().includes(searchTerm.toLowerCase())
-  // );
+
 
   return (
     <div className="h-screen flex flex-col justify-between">
@@ -63,7 +61,7 @@ const ChatRoomListPage = () => {
               divider={<Divider />}
               align="stretch"
             >
-              {data.data?.map((room) => (
+              {data?.data?.map((room) => (
                 <Link href={`chatroom/${room.id}`}>
                   <Flex
                     key={room.id}
