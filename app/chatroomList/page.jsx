@@ -71,7 +71,7 @@ const ChatRoomListPage = () => {
                     _hover={{ bg: "gray.100" }}
                     cursor="pointer"
                   >
-                    <Avatar size="md" name={room.id + " "} mr={3} />
+                    <Avatar size="md" name={room.id + "  "} mr={3} />
                     <Box flex={1}>
                       <Flex justify="space-between" align="baseline">
                         <Text fontWeight="bold">{room.id}</Text>
