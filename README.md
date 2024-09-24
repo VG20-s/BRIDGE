@@ -28,6 +28,7 @@
 <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white"> 
 <img src="https://img.shields.io/badge/chakraui-38B2A?style=for-the-badge&logo=chakraui&logoColor=white">
 ## ERD
+
 ![image](https://github.com/user-attachments/assets/a6388240-3189-4ba7-8982-87e7e087208c)
 
 ## 🛠 Troubleshooting
