@@ -19,17 +19,44 @@ import Botnav from "@/components/Bottomnav";
 import Header from "@/components/Header";
 import { useGetrooms } from "@/api/useROOmms";
 import Link from "next/link";
+import { supabase } from "@/utils/supabase/client";
+const TimeCal = (timeM) => {
+  const messageTime = new Date(timeM);
+  const currentTime = new Date();
+  const timeDifference = Math.floor((currentTime - messageTime) / 1000 / 60);
+  const timeLabel = timeDifference <= 1 ? "방금" : `${timeDifference}분 전`;
 
+  return timeLabel;
+};
 const ChatRoomListPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  // const { user_Id } = useUserStore((state) => state);
+  const { user_Id } = useUserStore((state) => state);
   const { data } = useGetrooms();
-  console.log(data)
+  console.log(data);
   const bgColor = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.600");
-
-
-
+  useEffect(() => {
+    const channel = supabase
+      .channel(`public:rooms:participants=cs.{${user_Id}}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "rooms",
+          filter: `participants=cs.{${user_Id}}`,
+        },
+        (payload) => {
+          console.log(payload);
+        }
+      )
+      .subscribe((status) => {
+        console.log("Subscription status:", status); // 구독 상태 확인
+      });
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user_Id]);
   return (
     <div className="h-screen flex flex-col justify-between">
       <Header />
@@ -74,11 +101,11 @@ const ChatRoomListPage = () => {
                       <Flex justify="space-between" align="baseline">
                         <Text fontWeight="bold">{room.id}</Text>
                         <Text fontSize="xs" color="gray.500">
-                          {room.id}
+                          {TimeCal(room.lasttime)}
                         </Text>
                       </Flex>
                       <Text fontSize="sm" color="gray.500" noOfLines={1}>
-                        {room.id}
+                        {room.lastmsg}
                       </Text>
                     </Box>
                     {room.unreadCount > 0 && (

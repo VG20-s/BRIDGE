@@ -4,7 +4,7 @@ import { supabase } from "@/utils/supabase/client";
 export async function getrooms(Ids) {
   const { data, error } = await supabase
     .from("rooms")
-    .select("id,participants")
+    .select("*")
     .contains("participants", Ids);
   if (error) {
     return { isError: true, data: data };

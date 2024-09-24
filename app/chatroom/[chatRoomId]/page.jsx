@@ -15,15 +15,8 @@ import {
 import { useUserStore } from "@/store/initial";
 import Botnav from "@/components/Bottomnav";
 import Link from "next/link";
-import { createClient } from "@supabase/supabase-js";
 import { usePathname } from "next/navigation";
-
-// Supabase setup
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
-
+import { supabase } from "@/utils/supabase/client";
 const ChatRoom = () => {
   const chatRoomId = usePathname().split("/")[2];
   const [messages, setMessages] = useState([]);
@@ -34,7 +27,6 @@ const ChatRoom = () => {
 
   const bgColor = useColorModeValue("gray.100", "gray.700");
   const borderColor = useColorModeValue("gray.200", "gray.600");
-
   useEffect(() => {
     if (!chatRoomId) return;
     console.log(chatRoomId);
@@ -50,15 +42,13 @@ const ChatRoom = () => {
         console.error("Error fetching messages:", error);
       } else {
         console.log(data);
-        setMessages(data);
+        setMessages(data); 
       }
     };
 
     fetchMessages();
-
-    // Real-time message subscription
     const channel = supabase
-      .channel(`chat`)
+      .channel(`public:chat:roomId=eq.${chatRoomId}`)
       .on(
         "postgres_changes",
         {
@@ -96,6 +86,7 @@ const ChatRoom = () => {
         roomId: chatRoomId,
         content: newMessage,
         userId: user_Id, // Include sender name
+        userName: user_name, // Include sender name
         read: false,
       },
     ]);
@@ -155,17 +146,17 @@ const ChatRoom = () => {
               >
                 <HStack
                   maxW="70%"
-                  bg={message.sender === user_Id ? "blue.100" : "gray.100"}
+                  bg={message.userId === user_Id ? "blue.100" : "gray.100"}
                   p={2}
                   borderRadius="lg"
                   spacing={2}
                 >
-                  {message.sender !== user_name && (
+                  {message.userId === user_Id && (
                     <Avatar size="sm" name={message.sender} />
                   )}
                   <VStack align={"flex-start"} spacing={0}>
                     <Text fontSize="xs" color="gray.500">
-                      {message.sender}
+                      {message.userName}
                     </Text>
                     <Text>{message.content}</Text>
                     <Text fontSize="xs" color="gray.500">
