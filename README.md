@@ -30,7 +30,8 @@
 
 ## ERD
 
-![image](https://github.com/user-attachments/assets/a6388240-3189-4ba7-8982-87e7e087208c)
+![image](https://github.com/user-attachments/assets/3785e1e8-8e95-4831-b574-82cd32907cee)
+
 
 ## 🛠 Troubleshooting
 
