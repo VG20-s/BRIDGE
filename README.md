@@ -27,3 +27,11 @@
 <img src="https://img.shields.io/badge/Zustand-F3DF49?style=for-the-badge&logo=zustand&logoColor=white">
 <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white"> 
 <img src="https://img.shields.io/badge/chakraui-38B2A?style=for-the-badge&logo=chakraui&logoColor=white">
+
+## 🛠 Troubleshooting
+
+
+
+
+##프로젝트 시작
+```pnpm dev```
