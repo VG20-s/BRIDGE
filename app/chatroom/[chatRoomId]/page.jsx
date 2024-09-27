@@ -20,7 +20,7 @@ import { supabase } from "@/utils/supabase/client";
 const ChatRoom = () => {
   const chatRoomId = usePathname().split("/")[2];
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
+  const newMessage = useRef(); //불필요한 리랜더링 발생으로 ref로 변경
   const [isSending, setisSending] = useState(false);
   const messagesEndRef = useRef(null);
   const { user_Id, user_name } = useUserStore((state) => state);
@@ -42,7 +42,7 @@ const ChatRoom = () => {
         console.error("Error fetching messages:", error);
       } else {
         console.log(data);
-        setMessages(data); 
+        setMessages(data);
       }
     };
 
@@ -79,12 +79,12 @@ const ChatRoom = () => {
 
   // Send message function
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || isSending) return;
+    if (!newMessage.current.value.trim() || isSending) return;
     setisSending(true);
     const { error } = await supabase.from("chat").insert([
       {
         roomId: chatRoomId,
-        content: newMessage,
+        content: newMessage.current.value,
         userId: user_Id, // Include sender name
         userName: user_name, // Include sender name
         read: false,
@@ -95,7 +95,7 @@ const ChatRoom = () => {
       console.error("Failed to send message:", error);
       setisSending(false);
     } else {
-      setNewMessage("");
+      newMessage.current.value = "";
       setisSending(false);
     }
   };
@@ -175,8 +175,7 @@ const ChatRoom = () => {
           <HStack w="full" p={4} spacing={2} bg={bgColor}>
             <Input
               flex={1}
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
+              ref={newMessage}
               placeholder="메시지를 입력하세요..."
               onKeyPress={(e) => {
                 if (e.key === "Enter") handleSendMessage();
